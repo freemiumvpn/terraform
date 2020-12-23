@@ -1,6 +1,6 @@
 provider "google" {
   version = "~> 3.42.0"
-  region  = var.region
+  region  = var.gcp_region
 }
 
 data "google_client_config" "default" {}
