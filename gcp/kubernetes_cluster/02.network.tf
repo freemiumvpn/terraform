@@ -46,3 +46,22 @@ resource "google_compute_firewall" "internal" {
   direction     = "INGRESS"
   source_ranges = ["10.240.0.0/24", "10.200.0.0/16"]
 }
+
+resource "google_compute_firewall" "external" {
+  name        = "${var.namespace}-firewall-external"
+  description = "External k8s firewall"
+  project     = google_project.k8s_project.project_id
+  network     = google_compute_network.vpc-network.id
+
+  allow {
+    protocol = "icmp"
+  }
+
+  allow {
+    protocol = "tcp"
+    ports    = ["22", "6433"]
+  }
+
+  direction     = "INGRESS"
+  source_ranges = ["0.0.0.0/0"]
+}
