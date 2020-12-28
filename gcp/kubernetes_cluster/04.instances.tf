@@ -4,11 +4,12 @@
 resource "google_compute_instance" "controller" {
   for_each = var.controller_instances
 
-  project      = google_project.k8s_project.project_id
-  zone         = var.gcp_zone
-  name         = "${var.namespace}-controller-${each.key}"
-  machine_type = "e2-medium"
-  description  = "k8s controller node"
+  project        = google_project.k8s_project.project_id
+  zone           = var.gcp_zone
+  name           = "controller-${each.key}"
+  machine_type   = "e2-medium"
+  description    = "k8s controller node"
+  can_ip_forward = true
 
   boot_disk {
     auto_delete = true
@@ -23,7 +24,12 @@ resource "google_compute_instance" "controller" {
     network    = google_compute_network.vpc-network.id
     subnetwork = google_compute_subnetwork.vpc-subnetwork.id
     network_ip = "10.240.0.1${each.key}"
+
+    access_config {
+      network_tier = "STANDARD"
+    }
   }
+
 
   service_account {
     scopes = [
@@ -35,19 +41,18 @@ resource "google_compute_instance" "controller" {
       "monitoring",
     ]
   }
-
-  can_ip_forward = true
 }
 
 
 resource "google_compute_instance" "worker" {
   for_each = var.worker_instances
 
-  project      = google_project.k8s_project.project_id
-  zone         = var.gcp_zone
-  name         = "${var.namespace}-worker-${each.key}"
-  machine_type = "e2-medium"
-  description  = "k8s worker node"
+  project        = google_project.k8s_project.project_id
+  zone           = var.gcp_zone
+  name           = "worker-${each.key}"
+  machine_type   = "e2-medium"
+  description    = "k8s worker node"
+  can_ip_forward = true
 
   boot_disk {
     auto_delete = true
@@ -62,6 +67,10 @@ resource "google_compute_instance" "worker" {
     network    = google_compute_network.vpc-network.id
     subnetwork = google_compute_subnetwork.vpc-subnetwork.id
     network_ip = "10.240.0.2${each.key}"
+
+    access_config {
+      network_tier = "STANDARD"
+    }
   }
 
   metadata = {
@@ -78,6 +87,4 @@ resource "google_compute_instance" "worker" {
       "monitoring",
     ]
   }
-
-  can_ip_forward = true
 }
