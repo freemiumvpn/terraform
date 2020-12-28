@@ -24,7 +24,6 @@ resource "google_compute_subnetwork" "vpc-subnetwork" {
 # docs: https://cloud.google.com/sdk/gcloud/reference/compute/firewall-rules/create
 # example: gcloud compute firewall-rules create <name> --allow tcp,udp,icmp --network <n> --source-ranges <r>
 # usage: https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/compute_firewall
-
 resource "google_compute_firewall" "internal" {
   name        = "${var.namespace}-firewall-internal"
   description = "Internal k8s firewall"
@@ -59,7 +58,7 @@ resource "google_compute_firewall" "external" {
 
   allow {
     protocol = "tcp"
-    ports    = ["22", "6433"]
+    ports    = ["22", "6443"]
   }
 
   direction     = "INGRESS"

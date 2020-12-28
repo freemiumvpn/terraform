@@ -16,7 +16,7 @@ resource "google_compute_instance" "controller" {
     mode        = "READ_WRITE"
     initialize_params {
       image = "ubuntu-2004-focal-v20201211"
-      size  = 100
+      size  = 50
     }
   }
 
@@ -59,7 +59,7 @@ resource "google_compute_instance" "worker" {
     mode        = "READ_WRITE"
     initialize_params {
       image = "ubuntu-2004-focal-v20201211"
-      size  = 100
+      size  = 50
     }
   }
 
